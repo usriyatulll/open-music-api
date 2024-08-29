@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS albums (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    year INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS songs (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    year INTEGER NOT NULL,
+    performer VARCHAR(255) NOT NULL,
+    genre VARCHAR(255),
+    duration INTEGER,
+    albumId INTEGER REFERENCES albums(id) ON DELETE SET NULL
+);
