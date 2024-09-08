@@ -1,7 +1,5 @@
 const Hapi = require("hapi");
-const { Pool } = require("pg");
-require("dotenv").config();
-
+const { Pool } = require('pg');  // Pastikan Pool diimpor dari 'pg'
 const pool = new Pool({
   user: process.env.PGUSER,
   host: process.env.PGHOST,
@@ -9,6 +7,7 @@ const pool = new Pool({
   password: process.env.PGPASSWORD,
   port: process.env.PGPORT,
 });
+require("dotenv").config();
 
 const init = async () => {
   const server = Hapi.server({

@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server.js",
+    "migrate": "node-pg-migrate up",
+    "rollback": "node-pg-migrate down",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,5 +16,8 @@
     "dotenv": "^16.4.5",
     "hapi": "^18.1.0",
     "pg": "^8.12.0"
+  },
+  "devDependencies": {
+    "node-pg-migrate": "^7.6.1"
   }
 }

@@ -4,6 +4,7 @@ const autoBind = require("auto-bind");
 
 class SongsHandler {
   constructor() {
+    this._pool = pool;
     autoBind(this);
   }
 
@@ -17,7 +18,7 @@ class SongsHandler {
       genre: Joi.string().required(),
       performer: Joi.string().required(),
       duration: Joi.number(),
-      albumId: Joi.string(),
+      albumId: Joi.number().allow(null), // Mengubah tipe menjadi number
     });
 
     const { error } = schema.validate({ title, year, genre, performer, duration, albumId });
@@ -37,7 +38,7 @@ class SongsHandler {
         values: [title, year, genre, performer, duration, albumId],
       };
 
-      const result = await pool.query(query);
+      const result = await this._pool.query(query);
 
       return h
         .response({
@@ -48,6 +49,7 @@ class SongsHandler {
         })
         .code(201);
     } catch (err) {
+      console.error("Error adding song:", err); // Menambahkan logging kesalahan
       return h
         .response({
           status: "error",
@@ -66,7 +68,7 @@ class SongsHandler {
         values: [id],
       };
 
-      const result = await pool.query(query);
+      const result = await this._pool.query(query);
 
       if (!result.rows.length) {
         return h
@@ -84,6 +86,7 @@ class SongsHandler {
         },
       };
     } catch (err) {
+      console.error("Error retrieving song:", err); // Menambahkan logging kesalahan
       return h
         .response({
           status: "error",
@@ -104,7 +107,7 @@ class SongsHandler {
       genre: Joi.string().required(),
       performer: Joi.string().required(),
       duration: Joi.number(),
-      albumId: Joi.string(),
+      albumId: Joi.number().allow(null),
     });
 
     const { error } = schema.validate({ title, year, genre, performer, duration, albumId });
@@ -124,7 +127,7 @@ class SongsHandler {
         values: [title, year, genre, performer, duration, albumId, id],
       };
 
-      const result = await pool.query(query);
+      const result = await this._pool.query(query);
 
       if (!result.rows.length) {
         return h
@@ -142,6 +145,7 @@ class SongsHandler {
         })
         .code(200);
     } catch (err) {
+      console.error("Error updating song:", err); // Menambahkan logging kesalahan
       return h
         .response({
           status: "error",
@@ -166,7 +170,7 @@ class SongsHandler {
         }
         if (performer) {
           if (title) queryText += " AND";
-          queryText += " performer ILIKE $2";
+          queryText += " performer ILIKE $" + (queryValues.length + 1);
           queryValues.push(`%${performer}%`);
         }
       }
@@ -180,6 +184,7 @@ class SongsHandler {
         },
       };
     } catch (err) {
+      console.error("Error retrieving songs:", err); 
       return h
         .response({
           status: "error",
@@ -198,7 +203,7 @@ class SongsHandler {
         values: [id],
       };
 
-      const result = await pool.query(query);
+      const result = await this._pool.query(query);
 
       if (!result.rows.length) {
         return h
@@ -216,6 +221,7 @@ class SongsHandler {
         })
         .code(200);
     } catch (err) {
+      console.error("Error deleting song:", err); 
       return h
         .response({
           status: "error",
